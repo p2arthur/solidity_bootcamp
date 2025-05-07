@@ -1,25 +1,35 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-contract SimpleStorage {
-    bool hasFavoriteNumber = true; // default: false
-    uint256 private  favNumber = 88; // default: 0
-    int256 favNegativeNumber = -88; //default: 0
-    string favString = "Fav string"; //default: ""
-    address managerAddress = 0x509e0153dd11b93B172eeA09F9765EeeD4F7ebf4;
-    bytes32 favBytes32 = "cat";
+contract FavoriteNumber {
+    // The visibility internal means that we only have access to this variable from within the same contract - there are other types of visibility
+    uint256 internal myFaveNumber;
 
-    function store(uint64 _favNumber) public {
-        favNumber = _favNumber; //change the value of the variable
+    // Structs are used to define our own types in a solidity code
+    struct Person {
+        string name;
+        uint256 faveNumber;
     }
 
-    function myFavNumber() public view returns (uint256){
-        return favNumber;
+    // We can create both dynamic and static arrays [] for dynamic [n] for static
+    Person[] public friends;
+
+    // We can create maps or hash tables to our contract
+    mapping(string => uint256) public friendsMapping;
+
+    // The constructor enables us to execute code when the contract is deployed
+    constructor(uint256 _myFaveNumber) {
+        myFaveNumber = _myFaveNumber;
     }
 
-    function returnPure() public pure returns(uint256){
-        return 7;
+    // Memory means that the variable will only be alive during the excution of the given function
+    function addFriend(string memory _name, uint256 _faveNumber) public {
+        // Memory
+        Person memory friendToAdd = Person({
+            name: _name,
+            faveNumber: _faveNumber
+        });
+        friends.push(friendToAdd);
+        friendsMapping[friendToAdd.name] = friendToAdd.faveNumber;
     }
 }
-
-
